@@ -2,6 +2,7 @@ from flask import Flask, request
 import telegram
 from settle.credentials import bot_token, bot_user_name, URL
 global bot
+import asyncio
 global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
@@ -10,7 +11,7 @@ app = Flask(__name__)
 
 data = {}
 
-@app.route('/{}'.format(TOKEN), methods=['POST'])
+@app.route('/', methods=['POST'])
 def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
@@ -38,7 +39,7 @@ def set_webhook():
 	print('set web hook')
 	# we use the bot object to link the bot to our app which live
 	# in the link provided by URL
-	s = bot.setWebhook('{URL}'.format(URL=URL, HOOK=TOKEN))
+	s = asyncio.run(bot.setWebhook('{URL}'.format(URL=URL)))
 	# something to let us know things work
 	if s:
 		return "webhook setup ok"
@@ -50,10 +51,10 @@ def api(from_handle,to_handle,amount_to_settle):
 	# print(from_handle,to_handle,amount_to_settle)
 	bot.sendMessage(chat_id=data[from_handle], text=from_handle+to_handle+amount_to_settle)
 	return 'done'
-
-@app.route('/')
-def index():
-	return '.'
+# 
+# @app.route('/')
+# def index():
+# 	return '.'
 
 if __name__ == '__main__':
 	# note the threaded arg which allow
