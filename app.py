@@ -5,7 +5,6 @@ global bot
 global TOKEN
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
-bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
 # start the flask app
 app = Flask(__name__)
 
@@ -33,9 +32,22 @@ def respond():
 	else:
 	   bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
 	return 'ok'
+  
+@app.route('/setwebhook', methods=['GET', 'POST'])
+def set_webhook():
+	print('set web hook')
+	# we use the bot object to link the bot to our app which live
+	# in the link provided by URL
+	s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
+	# something to let us know things work
+	if s:
+		return "webhook setup ok"
+	else:
+		return "webhook setup failed"
 
 @app.route('/api/<string:from_handle>/<string:to_handle>/<string:amount_to_settle>', methods=['GET', 'POST'])
 def api(from_handle,to_handle,amount_to_settle):
+	print(from_handle,to_handle,amount_to_settle)
 	bot.sendMessage(chat_id=data[from_handle], text=from_handle+to_handle+amount_to_settle)
 	return 'done'
 
