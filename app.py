@@ -25,14 +25,19 @@ def respond():
 		print("got text message :", text)
 		# the first time you chat with the bot AKA the welcoming message
 		if text == "/start":
-			bot_reply = """Welcome! Type /register @your-username to get set up"""
+			print('start')
+			bot_reply = "Welcome! Type /register @your-username to get set up"
+			print(chat_id,bot_reply)
 			bot.sendMessage(chat_id=chat_id, text=bot_reply)
 		elif text[:8] == "/register":
+			print('reg')
 			data[text[9:]] = chat_id
-			bot_reply = """Ayy thanks! You have been registered."""
+			bot_reply = "Ayy thanks! You have been registered."
 			print(text[9:])
+			print(chat_id,bot_reply)
 			bot.sendMessage(chat_id=chat_id, text=bot_reply)
 		else:
+			print('else')
 			bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
 		return 'ok'
 	else:
