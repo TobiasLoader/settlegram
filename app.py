@@ -33,10 +33,11 @@ def respond():
 			print(text[9:])
 			bot.sendMessage(chat_id=chat_id, text=bot_reply)
 		else:
-	   	bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
+			bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
+		return 'ok'
 	else:
 		print("no message sent in req")
-	return 'ok'
+		return 'no msg'
   
 @app.route('/setwebhook', methods=['GET', 'POST'])
 def set_webhook():
