@@ -15,23 +15,27 @@ data = {}
 def respond():
 	# retrieve the message in JSON and then transform it to Telegram object
 	update = telegram.Update.de_json(request.get_json(force=True), bot)
-	chat_id = update.message.chat.id
-	
-	# Telegram understands UTF-8, so encode text for unicode compatibility
-	text = update.message.text.encode('utf-8').decode()
-	# for debugging purposes only
-	print("got text message :", text)
-	# the first time you chat with the bot AKA the welcoming message
-	if text == "/start":
-		bot_reply = """Welcome! Type /register @your-username to get set up"""
-		bot.sendMessage(chat_id=chat_id, text=bot_reply)
-	elif text[:8] == "/register":
-		data[text[9:]] = chat_id
-		bot_reply = """Ayy thanks! You have been registered."""
-		print(text[9:])
-		bot.sendMessage(chat_id=chat_id, text=bot_reply)
+	if update.message is not None:
+		chat_id = update.message.chat.id
+		print("chat_id :", chat_id)
+
+		# Telegram understands UTF-8, so encode text for unicode compatibility
+		text = update.message.text.encode('utf-8').decode()
+		# for debugging purposes only
+		print("got text message :", text)
+		# the first time you chat with the bot AKA the welcoming message
+		if text == "/start":
+			bot_reply = """Welcome! Type /register @your-username to get set up"""
+			bot.sendMessage(chat_id=chat_id, text=bot_reply)
+		elif text[:8] == "/register":
+			data[text[9:]] = chat_id
+			bot_reply = """Ayy thanks! You have been registered."""
+			print(text[9:])
+			bot.sendMessage(chat_id=chat_id, text=bot_reply)
+		else:
+	   	bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
 	else:
-	   bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name")
+		print("no message sent in req")
 	return 'ok'
   
 @app.route('/setwebhook', methods=['GET', 'POST'])
